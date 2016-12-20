@@ -51,6 +51,8 @@ namespace RAE_Client
                 tmpClient.Connect(dialog.IPAddress, dialog.Port);
                 tmpLogList.Add(new LogEntry(DateTime.Now, LogMessageType.Info, $"Connected to server!"));
                 this.client = new Client(0, tmpClient);
+                this.client.OnNewLogEntry += Client_OnNewLogEntry;
+                this.client.OnPacketReceived += Client_OnPacketReceived;
                 this.client.ConnectionManager.StartListening();
                 this.client.ConnectionManager.SendInfoMessage("Hello :-)", "Server");
                 foreach (LogEntry entry in this.tmpLogList)
@@ -69,6 +71,16 @@ namespace RAE_Client
                 tmpLogList.Add(new LogEntry(DateTime.Now, LogMessageType.Error, ex.Message));
                 MessageBox.Show("Cannot connect to the server! \n Look at the 'Log-Tab' for more information!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void Client_OnPacketReceived(object sender, NetworkPacketEventArgs e)
+        {
+            this.tmpLogList.Add(new LogEntry( DateTime.Now, LogMessageType.Info, $"Packet Received! {e.Packet.PacketType}"));
+        }
+
+        private void Client_OnNewLogEntry(object sender, LogMessageEventArgs e)
+        {
+            this.tmpLogList.Add(e.LogEntry);
         }
 
         private void MenuItem_Upload_Assemblie_Click(object sender, RoutedEventArgs e)

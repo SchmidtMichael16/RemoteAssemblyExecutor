@@ -194,6 +194,8 @@ namespace RemoteAssemblyExecutor
                 using (MemoryStream stream = new MemoryStream())
                 {
                     formatter.Serialize(stream, packet);
+                    //stream.Seek(0, SeekOrigin.Begin);
+                    //NetworkPacket tmpPacket = (NetworkPacket)formatter.Deserialize(stream);
                     byteBuffer = stream.ToArray();
                 }
 

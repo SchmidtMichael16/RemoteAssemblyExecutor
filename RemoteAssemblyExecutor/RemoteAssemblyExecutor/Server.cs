@@ -92,9 +92,22 @@ namespace RemoteAssemblyExecutor
                 TcpClient tmpClient = tcpListener.AcceptTcpClient();
                 this.clientList.Add(new Client(this.GetNextClientId(), tmpClient));
                 this.clientList[this.clientList.Count - 1].ConnectionManager.StartListening();
+                this.clientList[this.clientList.Count - 1].ConnectionManager.OnNewLogEntry += ConnectionManager_OnNewLogEntry;
+                this.clientList[this.clientList.Count - 1].ConnectionManager.OnPacketReceived += ConnectionManager_OnPacketReceived;
+                //this.clientList[this.clientList.Count - 1].ConnectionManager.SendInfoMessage("asdf", "some client");
                 this.uiContext.Send(x => this.LogList.Add(new LogEntry(this.nextClientId, DateTime.Now, LogMessageType.Info, $"Client-{this.nextClientId} connected! IpAdress:{((IPEndPoint)tmpClient.Client.RemoteEndPoint).Address.ToString()}")), null);
                 Thread.Sleep(500);
             }
+        }
+
+        private void ConnectionManager_OnPacketReceived(object sender, NetworkPacketEventArgs e)
+        {
+            this.uiContext.Send(x => this.LogList.Add(new LogEntry(e.Packet.ClientId, DateTime.Now, LogMessageType.Info, $"Packet received! {e.Packet.PacketType}")), null);
+        }
+
+        private void ConnectionManager_OnNewLogEntry(object sender, LogMessageEventArgs e)
+        {
+            this.uiContext.Send(x=> this.LogList.Add(e.LogEntry),null);
         }
 
         /// <summary>
