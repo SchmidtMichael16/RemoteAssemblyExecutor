@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace RemoteAssemblyExecutor
 {
@@ -11,10 +12,16 @@ namespace RemoteAssemblyExecutor
 
         private ConnectionManager connectionManager;
 
-        public Client(int id, TcpClient tcpClient)
+        /// <summary>
+        /// The synchronization context of the user interface.
+        /// </summary>
+        private SynchronizationContext uiContext;
+
+        public Client(int id, TcpClient tcpClient,SynchronizationContext uiContext )
         {
             this.Id = id;
             this.tcpClient = tcpClient;
+            this.uiContext = uiContext;
             this.connectionManager = new ConnectionManager(tcpClient.GetStream());
             this.connectionManager.OnNewLogEntry += ConnectionManager_OnNewLogEntry;
             this.connectionManager.OnPacketReceived += ConnectionManager_OnPacketReceived;
@@ -87,7 +94,7 @@ namespace RemoteAssemblyExecutor
         private void ConnectionManager_OnPacketReceived(object sender, NetworkPacketEventArgs e)
         {
             e.Packet.ClientId = this.Id;
-            this.FireOnPacketReceived(e);
+            this.uiContext.Send(x => this.LogList.Add(new LogEntry(e.Packet.ClientId, DateTime.Now, LogMessageType.Info, $"Packet received! {e.Packet.PacketType}")), null);
         }
 
         /// <summary>
@@ -98,7 +105,7 @@ namespace RemoteAssemblyExecutor
         private void ConnectionManager_OnNewLogEntry(object sender, LogMessageEventArgs e)
         {
             e.LogEntry.ClientId = this.Id;
-            this.FireOnNewLogEntry(e);
+            this.uiContext.Send(x => this.LogList.Add(e.LogEntry),null);
         }
     }
 }

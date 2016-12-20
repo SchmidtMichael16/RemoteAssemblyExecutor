@@ -14,27 +14,32 @@ namespace RemoteAssemblyExecutor
     public enum PacketType
     {
         /// <summary>
-        /// The log packet Type ServerCommand.
+        /// The packet Type ServerCommand.
         /// </summary>
         ServerCommand,
 
         /// <summary>
-        /// The log packet Type ControlCommand.
+        /// The packet Type ControlCommand.
         /// </summary>
         ControlCommand,
 
         /// <summary>
-        /// The log packet Type Modules.
+        /// The packet Type Modules.
         /// </summary>
         Modules,
 
         /// <summary>
-        /// The log packet Type InfoMessage.
+        /// The packet Type InfoMessage.
         /// </summary>
         InfoMessage,
 
         /// <summary>
-        /// The log packet Type AliveMessage.
+        /// The packet Type InfoMessage.
+        /// </summary>
+        StartMethod,
+
+        /// <summary>
+        /// The packet Type AliveMessage.
         /// </summary>
         AliveMessage
     }

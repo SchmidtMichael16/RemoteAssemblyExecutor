@@ -16,6 +16,7 @@ using RemoteAssemblyExecutor;
 using System.Net.Sockets;
 using System.Collections.ObjectModel;
 using Microsoft.Win32;
+using System.Threading;
 
 namespace RAE_Client
 {
@@ -50,11 +51,12 @@ namespace RAE_Client
                 tmpLogList.Add(new LogEntry(DateTime.Now, LogMessageType.Info, $"Try to connect to server! IpAdress:{dialog.IPAddress.ToString()} Port:{dialog.Port}"));
                 tmpClient.Connect(dialog.IPAddress, dialog.Port);
                 tmpLogList.Add(new LogEntry(DateTime.Now, LogMessageType.Info, $"Connected to server!"));
-                this.client = new Client(0, tmpClient);
+                this.client = new Client(0, tmpClient, SynchronizationContext.Current);
                 this.client.OnNewLogEntry += Client_OnNewLogEntry;
                 this.client.OnPacketReceived += Client_OnPacketReceived;
                 this.client.ConnectionManager.StartListening();
                 this.client.ConnectionManager.SendInfoMessage("Hello :-)", "Server");
+                this.client.ConnectionManager.SendStartMethod("Method1", "Server");
                 foreach (LogEntry entry in this.tmpLogList)
                 {
                     this.client.LogList.Add(entry);
@@ -75,12 +77,14 @@ namespace RAE_Client
 
         private void Client_OnPacketReceived(object sender, NetworkPacketEventArgs e)
         {
-            this.tmpLogList.Add(new LogEntry( DateTime.Now, LogMessageType.Info, $"Packet Received! {e.Packet.PacketType}"));
+            //this.tmpLogList.Add(new LogEntry( DateTime.Now, LogMessageType.Info, $"Packet Received! {e.Packet.PacketType}"));
+
+            //this.tmpLogList.Add(new LogEntry(DateTime.Now, LogMessageType.Info, "asdfasdf"));
         }
 
         private void Client_OnNewLogEntry(object sender, LogMessageEventArgs e)
         {
-            this.tmpLogList.Add(e.LogEntry);
+            //this.tmpLogList.Add(e.LogEntry);
         }
 
         private void MenuItem_Upload_Assemblie_Click(object sender, RoutedEventArgs e)

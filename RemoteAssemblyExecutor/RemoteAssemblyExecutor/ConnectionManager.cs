@@ -108,7 +108,7 @@ namespace RemoteAssemblyExecutor
                         packetLegth = BitConverter.ToInt32(packetLengthBuffer, 0);
 
                         bytesBuffer = new byte[packetLegth];
-                        this.networkStream.Read(bytesBuffer, 0, bytesBuffer.Length);
+                        readBytes = this.networkStream.Read(bytesBuffer, 0, bytesBuffer.Length);
 
                         stream = new MemoryStream(bytesBuffer);
                         try
@@ -162,13 +162,19 @@ namespace RemoteAssemblyExecutor
         public void SendAliveMessage()
         {
             NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.AliveMessage };
-            this.SendPacket(tmpPacket, string.Empty, "AliveMessage");
+            //this.SendPacket(tmpPacket, string.Empty, "AliveMessage");
         }
 
         public void SendInfoMessage(string message, string recipient)
         {
             NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.InfoMessage, InfoMessage = message };
             this.SendPacket(tmpPacket, recipient, "InfoMessage");
+        }
+
+        public void SendStartMethod(string methodName, string recipient)
+        {
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.StartMethod, MethodName = methodName };
+            this.SendPacket(tmpPacket, recipient, "StartMehtod");
         }
 
         /// <summary>

@@ -90,7 +90,7 @@ namespace RemoteAssemblyExecutor
             while (true)
             {
                 TcpClient tmpClient = tcpListener.AcceptTcpClient();
-                this.clientList.Add(new Client(this.GetNextClientId(), tmpClient));
+                this.clientList.Add(new Client(this.GetNextClientId(), tmpClient, this.uiContext));
                 this.clientList[this.clientList.Count - 1].ConnectionManager.StartListening();
                 this.clientList[this.clientList.Count - 1].ConnectionManager.OnNewLogEntry += ConnectionManager_OnNewLogEntry;
                 this.clientList[this.clientList.Count - 1].ConnectionManager.OnPacketReceived += ConnectionManager_OnPacketReceived;

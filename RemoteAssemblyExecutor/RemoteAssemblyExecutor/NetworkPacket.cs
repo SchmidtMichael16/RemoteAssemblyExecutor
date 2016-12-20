@@ -50,6 +50,12 @@ namespace RemoteAssemblyExecutor
         public string InfoMessage { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the mehtod.
+        /// </summary>
+        /// <value>The method name.</value>
+        public string MethodName { get; set; }
+
+        /// <summary>
         /// Gets or sets the packet type.
         /// </summary>
         /// <value>The packet type of the packet. </value>
