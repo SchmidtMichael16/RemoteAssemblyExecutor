@@ -32,10 +32,10 @@ namespace RemoteAssemblyExecutor
         public int ClientId { get; set; }
 
         /// <summary>
-        /// Gets or sets the process id.
+        /// Gets or sets the app domain id.
         /// </summary>
-        /// <value>The process id of the packet. </value>
-        public int ProcessId { get; set; }
+        /// <value>The app domain id of the packet. </value>
+        public int AppDomainId { get; set; }
 
         /// <summary>
         /// Gets or sets the new priority.
@@ -50,7 +50,7 @@ namespace RemoteAssemblyExecutor
         public string InfoMessage { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the mehtod.
+        /// Gets or sets the name of the method.
         /// </summary>
         /// <value>The method name.</value>
         public string MethodName { get; set; }
@@ -66,6 +66,35 @@ namespace RemoteAssemblyExecutor
         /// </summary>
         /// <value>The sender address of the packet. </value>
         public IPAddress SenderAdress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the buffer.
+        /// </summary>
+        /// <value>The buffer of the packet. </value>
+        public byte[] Buffer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assembly list.
+        /// </summary>
+        /// <value>The assembly list of the packet. </value>
+        public List<AssemblyEntry> AssemblyList { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assembly member.
+        /// </summary>
+        /// <value>The assembly member of the packet. </value>
+        public AssemblyMember Member { get; set; }
+
+        /// <summary>
+        /// Gets or sets the log entry.
+        /// </summary>
+        /// <value>The log entry. </value>
+        public LogEntry LogEntry { get; set; }
+
+        /// <summary>
+        /// Gets or sets the result entry.
+        /// </summary>
+        /// <value>The result entry. </value>
+        public ResultEntry ResultEntry { get; set; }
     }
 }
-

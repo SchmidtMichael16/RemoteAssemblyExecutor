@@ -38,12 +38,18 @@ namespace RemoteAssemblyExecutor
         private bool listen;
 
         /// <summary>
+        /// The thread lock for sending packets.
+        /// </summary>
+        private object sendLock;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionManager"/> class.
         /// </summary>
         /// <param name="networkStream">The network stream.</param>
         public ConnectionManager(NetworkStream networkStream)
         {
             this.networkStream = networkStream;
+            this.sendLock = new object();
         }
 
         /// <summary>
@@ -138,7 +144,7 @@ namespace RemoteAssemblyExecutor
                 }
                 catch (Exception)
                 {
-                    this.FireOnPacketReceived(new NetworkPacketEventArgs(new NetworkPacket() { PacketType = PacketType.ServerCommand}));
+                    this.FireOnPacketReceived(new NetworkPacketEventArgs(new NetworkPacket() { PacketType = PacketType.ServerCommand }));
                 }
 
                 Thread.Sleep(500);
@@ -151,7 +157,7 @@ namespace RemoteAssemblyExecutor
         /// <param name="recepient">The recipient.</param>
         public void SendCloseConnection(string recepient)
         {
-            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.ServerCommand};
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.ServerCommand };
             this.SendPacket(tmpPacket, recepient, "SendCloseConnection");
             this.StopListening();
         }
@@ -162,19 +168,86 @@ namespace RemoteAssemblyExecutor
         public void SendAliveMessage()
         {
             NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.AliveMessage };
-            //this.SendPacket(tmpPacket, string.Empty, "AliveMessage");
+            ////this.SendPacket(tmpPacket, string.Empty, "AliveMessage");
         }
 
+        /// <summary>
+        /// Sends a info message to the client.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="recipient">The recipient.</param>
         public void SendInfoMessage(string message, string recipient)
         {
             NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.InfoMessage, InfoMessage = message };
             this.SendPacket(tmpPacket, recipient, "InfoMessage");
         }
 
-        public void SendStartMethod(string methodName, string recipient)
+        /// <summary>
+        /// Sends start method to the server.
+        /// </summary>
+        /// <param name="member">The assembly member.</param>
+        /// <param name="appDomainId">The domain app.</param>
+        /// <param name="recipient">The recipient.</param>
+        public void SendStartMethod(AssemblyMember member, int appDomainId, string recipient)
         {
-            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.StartMethod, MethodName = methodName };
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.StartMethod, Member = member, AppDomainId = appDomainId };
             this.SendPacket(tmpPacket, recipient, "StartMehtod");
+        }
+
+        /// <summary>
+        /// Sends a log entry.
+        /// </summary>
+        /// <param name="logEntry">The log entry.</param>
+        /// <param name="recipient">The recipient.</param>
+        public void SendLogEntry(LogEntry logEntry, string recipient)
+        {
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.LogEntry, LogEntry = logEntry };
+            this.SendPacket(tmpPacket, recipient, "SendLogEntry");
+        }
+
+        /// <summary>
+        /// Sends a result entry.
+        /// </summary>
+        /// <param name="resultEntry">The result entry.</param>
+        /// <param name="recipient">The recipient.</param>
+        public void SendResultEntry(ResultEntry resultEntry, string recipient)
+        {
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.ResultEntry, ResultEntry = resultEntry };
+            this.SendPacket(tmpPacket, recipient, "SendResultEntry");
+        }
+
+        /// <summary>
+        /// Sends an assembly.
+        /// </summary>
+        /// <param name="buffer">The assembly as byte array.</param>
+        /// <param name="filename">The filename of the assembly.</param>
+        /// <param name="recipient">The recipient.</param>
+        public void SendAssemblie(byte[] buffer, string filename, string recipient)
+        {
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.Assemblie, Buffer = buffer, InfoMessage = filename };
+            this.SendPacket(tmpPacket, recipient, "SendAssemblie");
+        }
+
+        /// <summary>
+        /// Sends the assembly list.
+        /// </summary>
+        /// <param name="assemblyList">The assembly list.</param>
+        /// <param name="recipient">The recipient.</param>
+        public void SendAssemblieList(List<AssemblyEntry> assemblyList, string recipient)
+        {
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.AssemblieList, AssemblyList = assemblyList };
+            this.SendPacket(tmpPacket, recipient, "SendAssemblieList");
+        }
+
+        /// <summary>
+        /// Sends delete assembly.
+        /// </summary>
+        /// <param name="fullname">The full name of the assembly.</param>
+        /// <param name="recipient">The recipient.</param>
+        public void SendDeleteAssembly(string fullname, string recipient)
+        {
+            NetworkPacket tmpPacket = new NetworkPacket() { PacketType = PacketType.DeleteAssembly, InfoMessage = fullname };
+            this.SendPacket(tmpPacket, recipient, "SendDeleteAssembly");
         }
 
         /// <summary>
@@ -193,37 +266,37 @@ namespace RemoteAssemblyExecutor
         /// <param name="requestInfo">The request info.</param>
         private void SendPacket(NetworkPacket packet, string recipient, string requestInfo)
         {
-            try
+            lock (this.sendLock)
             {
-                byte[] byteBuffer;
-                BinaryFormatter formatter = new BinaryFormatter();
-                using (MemoryStream stream = new MemoryStream())
+                try
                 {
-                    formatter.Serialize(stream, packet);
-                    //stream.Seek(0, SeekOrigin.Begin);
-                    //NetworkPacket tmpPacket = (NetworkPacket)formatter.Deserialize(stream);
-                    byteBuffer = stream.ToArray();
-                }
+                    byte[] byteBuffer;
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        formatter.Serialize(stream, packet);
+                        byteBuffer = stream.ToArray();
+                    }
 
-                // Send length of the network packet.
-                this.networkStream.Write(BitConverter.GetBytes((int)byteBuffer.Length), 0, 4);
-                if (packet.PacketType != PacketType.AliveMessage)
+                    // Send length of the network packet.
+                    this.networkStream.Write(BitConverter.GetBytes((int)byteBuffer.Length), 0, 4);
+                    if (packet.PacketType != PacketType.AliveMessage)
+                    {
+                        this.FireOnNewLogEntry(new LogMessageEventArgs(new LogEntry(DateTime.Now, LogMessageType.Info, $"Send length of the {requestInfo} packet  --> {(Int32)byteBuffer.Length} to {recipient}!")));
+                    }
+
+                    // Send network packet.
+                    this.networkStream.Write(byteBuffer, 0, byteBuffer.Length);
+
+                    if (packet.PacketType != PacketType.AliveMessage)
+                    {
+                        this.FireOnNewLogEntry(new LogMessageEventArgs(new LogEntry(DateTime.Now, LogMessageType.Info, $"Send data of {requestInfo} to  {recipient}!")));
+                    }
+                }
+                catch (Exception ex)
                 {
-                    this.FireOnNewLogEntry(new LogMessageEventArgs(new LogEntry(DateTime.Now, LogMessageType.Info, $"Send length of the {requestInfo} packet  --> {(Int32)byteBuffer.Length} to {recipient}!")));
+                    this.FireOnNewLogEntry(new LogMessageEventArgs(new LogEntry(DateTime.Now, LogMessageType.Error, $"Error during send {requestInfo} to  {recipient}! " + ex.Message)));
                 }
-
-                // Send network packet.
-                this.networkStream.Write(byteBuffer, 0, byteBuffer.Length);
-
-                if (packet.PacketType != PacketType.AliveMessage)
-                {
-                    this.FireOnNewLogEntry(new LogMessageEventArgs(new LogEntry(DateTime.Now, LogMessageType.Info, $"Send data of {requestInfo} to  {recipient}!")));
-                }
-            }
-            catch (Exception ex)
-            {
-                this.FireOnNewLogEntry(new LogMessageEventArgs(new LogEntry(DateTime.Now, LogMessageType.Info, $"Error during send {requestInfo} to  {recipient}! " + ex.Message)));
-                //this.FireOnPacketReceived(new NetworkPacketEventArgs(new NetworkPacket() { PacketType = PacketType.ServerCommand, CommandType = CommandType.CloseConnection }));
             }
         }
 
@@ -252,4 +325,3 @@ namespace RemoteAssemblyExecutor
         }
     }
 }
-

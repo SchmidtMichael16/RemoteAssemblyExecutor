@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RemoteAssemblyExecutor"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="1000">
     <Grid>
         <ListView Name="LogList">
             <ListView.View>
@@ -13,7 +13,7 @@
                     <GridViewColumn Width="35" Header="ID">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Name="ID" Width="35" Height="20" Text="{Binding Path=ClientId}"  FontWeight="Bold"></TextBlock>
+                                <TextBlock Name="ID" Width="35" Height="20" Text="{Binding Path=ClientId}"  FontWeight="Bold" Foreground="{Binding Path=ForegroundColor}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -21,7 +21,7 @@
                     <GridViewColumn Width="60" Header="Type">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate >
-                                <TextBlock Name="MessageType" Width="60" Height="20" Text="{Binding Path=MessageType}"></TextBlock>
+                                <TextBlock Name="MessageType" Width="60" Height="20" Text="{Binding Path=MessageType}" Foreground="{Binding Path=ForegroundColor}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -29,15 +29,15 @@
                     <GridViewColumn Width="150" Header="Datetime">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Name="Datetime" Width="150" Height="20" Text="{Binding Path=DateString}"></TextBlock>
+                                <TextBlock Name="Datetime" Width="150" Height="20" Text="{Binding Path=DateString}" Foreground="{Binding Path=ForegroundColor}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn  Header="Text">
+                    <GridViewColumn Width="700" Header="Text">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Name="MessageText"  Text="{Binding Path=MessageText}" FontWeight="Bold"></TextBlock>
+                                <TextBlock Name="MessageText"  Text="{Binding Path=MessageText}" FontWeight="Bold" Foreground="{Binding Path=ForegroundColor}"></TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

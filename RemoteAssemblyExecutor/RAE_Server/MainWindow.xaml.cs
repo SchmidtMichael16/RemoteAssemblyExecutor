@@ -1,47 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using RemoteAssemblyExecutor;
-using System.Threading;
+﻿//-----------------------------------------------------------------------
+// <copyright file="MainWindow.xaml.cs" company="fhwn.ac.at">
+//     Copyright (c) fhwn.ac.at. All rights reserved.
+// </copyright>
+// <author>Michael Schmidt</author>
+// <summary>Class ParameterWindow.</summary>
+//-----------------------------------------------------------------------
 
 namespace RAE_Server
 {
+    using System.IO;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Controls; 
+    using RemoteAssemblyExecutor;
+
     /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
+    /// Represent the class MainWindow.
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// The server.
+        /// </summary>
         private Server server;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            
             var startWindow = new StartWindow();
-            //startWindow.ShowDialog();
 
             if (startWindow.ShowDialog() == false)
             {
                 if (startWindow.Start)
                 {
-                    
                     this.server = new Server(startWindow.Port, SynchronizationContext.Current);
-                    
+                    this.server.CleanUpWorkingDirectory();
+                    this.RunList.ItemsSource = this.server.RunList;
+
                     var listViewLog = this.ListViewLog.FindName("LogList") as ListView;
+
                     if (listViewLog != null)
                     {
                         listViewLog.ItemsSource = this.server.LogList;
                     }
+
                     this.server.ConnectionListenerStart();
                 }
                 else
@@ -55,9 +61,13 @@ namespace RAE_Server
             }
         }
 
+        /// <summary>
+        /// The callback method of the port click event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void MenuItem_Port_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

@@ -41,6 +41,31 @@ namespace RemoteAssemblyExecutor
         /// <summary>
         /// The packet Type AliveMessage.
         /// </summary>
-        AliveMessage
+        AliveMessage,
+
+        /// <summary>
+        /// The packet Type AliveMessage.
+        /// </summary>
+        Assemblie,
+
+        /// <summary>
+        /// The packet Type AssemblyList.
+        /// </summary>
+        AssemblieList,
+
+        /// <summary>
+        /// The packet Type DeleteAssembly.
+        /// </summary>
+        DeleteAssembly,
+
+        /// <summary>
+        /// The packet Type LogEntry.
+        /// </summary>
+        LogEntry,
+
+        /// <summary>
+        /// The packet Type ResultEntry.
+        /// </summary>
+        ResultEntry
     }
 }

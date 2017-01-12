@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RAE_Server"
         xmlns:custom ="clr-namespace:RemoteAssemblyExecutor;assembly=RemoteAssemblyExecutor"
         mc:Ignorable="d"
-        Title="Server" Height="350" Width="525"
+        Title="Server" Height="500" Width="1000"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid>
@@ -18,13 +18,68 @@
             <DockPanel Grid.Row="0">
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="_File">
-                        <MenuItem Header="_Port"  Click="MenuItem_Port_Click"/>
+                        <MenuItem Header="_Port"  Click="MenuItem_Port_Click" IsEnabled="False"/>
                     </MenuItem>
                 </Menu>
             </DockPanel>
 
             <TabControl Grid.Row="1"  Name="MainTab" TabStripPlacement="Bottom">
-                <TabItem x:Name="Tab_Runs" Header="Runs"></TabItem>
+                <TabItem x:Name="Tab_Runs" Header="Runs">
+                    <ListView Name="RunList">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Start" Width="110">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Name="Start" Text="{Binding Path=StartDateTime}"  Width="110"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Duration (msec.)" Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Name="Duration" Text="{Binding Path=Duration}" Width="150"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Assemlby" Width="300">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Name="AssemblyName" Text="{Binding Path=AssemblyName}" Width="300"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Method" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Name="Method" Text="{Binding Path=MethodName}" Width="100"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                
+                                <GridViewColumn Header="Parameters" Width="200">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Name="Parameters" Text="{Binding Path=Parameters}" Width="200"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Result" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Name="Result" Text="{Binding Path=Result}" Width="120"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </TabItem>
                 <TabItem x:Name="Tab_Log" Header="Log">
                     <custom:ListView_Log x:Name="ListViewLog"></custom:ListView_Log>
                 </TabItem>

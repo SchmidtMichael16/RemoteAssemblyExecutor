@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RAE_Client"
         xmlns:custom="clr-namespace:RemoteAssemblyExecutor;assembly=RemoteAssemblyExecutor"
         mc:Ignorable="d"
-        Title="Client" Height="350" Width="525"
+        Title="Client" Height="500" Width="1000"
         >
     <Grid>
         <Grid>
@@ -25,8 +25,69 @@
             </DockPanel>
 
             <TabControl Grid.Row="1"  Name="MainTab" TabStripPlacement="Bottom">
-                <TabItem x:Name="Tab_Overview" Header="Overview"></TabItem>
-                <TabItem x:Name="Tab_Results" Header="Results"></TabItem>
+                <TabItem x:Name="Tab_Overview" Header="Overview">
+                    <ListView Name="OverviewList">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Loaded Assembly" Width="600">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate >
+                                            <TextBlock Name="Name" Width="600" Height="30" Text="{Binding Path=Name}"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Name="Delete" Height="30" Width="100" Click="Delete_Click">Delete</Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Name="Check" Height="30" Width="100" Click="Check_Click">Check</Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Name="Run" Height="30" Width="100" Click="Run_Click">Run</Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+                <TabItem x:Name="Tab_Results" Header="Results">
+                    <ListView Name="ResultList">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Type" Width="200">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate >
+                                            <TextBlock Name="Type" Width="200" Height="20" Text="{Binding Path=Type}"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Result" Width="400">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Name="Result" Width="400" Height="20" Text="{Binding Path=Result}"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
                 <TabItem x:Name="Tab_Log" Header="Log">
                     <custom:ListView_Log x:Name="ListViewLog"></custom:ListView_Log>
                 </TabItem>

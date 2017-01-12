@@ -1,31 +1,32 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="LogMessageType.cs" company="fhwn.ac.at">
+// <copyright file="MemberType.cs" company="fhwn.ac.at">
 //     Copyright (c) fhwn.ac.at. All rights reserved.
 // </copyright>
 // <author>Michael Schmidt</author>
-// <summary>Class LogMessageType.</summary>
+// <summary>Class MemberType.</summary>
 //-----------------------------------------------------------------------
 
 namespace RemoteAssemblyExecutor
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     /// <summary>
-    /// Represent the class LogMessageType.
+    /// Represent the class MemberType.
     /// </summary>
-    public enum LogMessageType
+    public enum MemberType
     {
         /// <summary>
-        /// The log message Type Info.
+        /// The member type Constructor.
         /// </summary>
-        Info,
+        Constructor,
 
         /// <summary>
-        /// The log message Type Warning.
+        /// The member type Method.
         /// </summary>
-        Warning,
-
-        /// <summary>
-        /// The log message Type Error.
-        /// </summary>
-        Error
+        Method
     }
 }

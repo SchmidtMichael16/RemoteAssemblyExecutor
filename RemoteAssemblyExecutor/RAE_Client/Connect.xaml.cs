@@ -1,41 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Net;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Connect.xaml.cs" company="fhwn.ac.at">
+//     Copyright (c) fhwn.ac.at. All rights reserved.
+// </copyright>
+// <author>Michael Schmidt</author>
+// <summary>Class Connect.</summary>
+//-----------------------------------------------------------------------
 
 namespace RAE_Client
 {
+    using System.Net;
+    using System.Windows;
+
     /// <summary>
-    /// Interaktionslogik für Connect.xaml
+    /// Represent the class Connect.
     /// </summary>
     public partial class Connect : Window
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Connect"/> class.
+        /// </summary>
         public Connect()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        
+
+        /// <summary>
+        /// Gets or sets the port.
+        /// </summary>
+        /// <value>The port of the server.</value>
         public int Port { get; set; }
 
+        /// <summary>
+        /// Gets or sets the IP address.
+        /// </summary>
+        /// <value>The IP address of the server. </value>
         public IPAddress IPAddress { get; set; }
 
+        /// <summary>
+        /// The callback method of the connect click event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void BtConnect_Click(object sender, RoutedEventArgs e)
         {
             string strIpadress = TxtIpAdress.Text;
             string strPort = TxtPort.Text;
             IPAddress ipadress;
             int port;
-
 
             if (IPAddress.TryParse(strIpadress, out ipadress))
             {
@@ -60,7 +71,6 @@ namespace RAE_Client
                 {
                     MessageBox.Show("Port ist not valid!");
                 }
-               
             }
             else
             {
@@ -68,6 +78,11 @@ namespace RAE_Client
             }
         }
 
+        /// <summary>
+        /// The callback method of the abort click event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void BtAbort_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
